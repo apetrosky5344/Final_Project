@@ -1,0 +1,15 @@
+[RockyLinuxServer]
+10.2.37.114
+
+[windows]
+10.2.37.92
+
+[RockyLinuxServer:vars]
+ansible_user=cisstudent
+
+[windows:vars]
+ansible_user=CISuser
+ansible_password="cisisfun2023!"
+ansible_port=5986
+ansible_connection=winrm
+ansible_winrm_server_cert_validation=ignore

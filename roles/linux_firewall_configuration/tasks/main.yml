@@ -1,0 +1,14 @@
+---
+- name: Allow HTTP traffic
+  ansible.builtin.firewalld:
+    port: 80/tcp
+    state: enabled
+    permanent: true
+    immediate: yes
+
+- name: Allow HTTPS traffic
+  ansible.builtin.firewalld:
+    port: 443/tcp
+    state: enabled
+    permanent: true
+    immediate: yes

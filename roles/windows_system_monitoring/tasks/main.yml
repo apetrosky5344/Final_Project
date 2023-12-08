@@ -1,0 +1,41 @@
+---
+- name: Collect CPU usage
+  ansible.windows.win_shell: |
+    $cpuLoad = Get-WmiObject win32_processor | Measure-Object -property LoadPercentage -Average | Select Average
+    $cpuLoad.Average
+  register: cpu_usage
+  changed_when: False
+
+- name: Display CPU usage
+  debug:
+    msg: "CPU Load Percentage: {{ cpu_usage.stdout }}"
+
+- name: Collect RAM usage
+  ansible.windows.win_shell: |
+    $os = Get-WmiObject win32_operatingsystem
+    $freeRAM = $os.FreePhysicalMemory
+    $totalRAM = $os.TotalVisibleMemorySize
+    $usedRAM = $totalRAM - $freeRAM
+    $usedRAMMB = [math]::round($usedRAM / 1024, 2)
+    $totalRAMMB = [math]::round($totalRAM / 1024, 2)
+    $usedRAMMB.ToString() + " MB of " + $totalRAMMB.ToString() + " MB used"
+  register: ram_usage
+  changed_when: False
+
+- name: Display RAM usage
+  debug:
+    msg: "RAM Usage: {{ ram_usage.stdout }}"
+
+- name: Collect disk usage
+  ansible.windows.win_shell: |
+    $disk = Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'"
+    $freeSpaceGB = [math]::round($disk.FreeSpace / 1GB, 2)
+    $totalSpaceGB = [math]::round($disk.Size / 1GB, 2)
+    $usedSpaceGB = $totalSpaceGB - $freeSpaceGB
+    $usedSpaceGB.ToString() + " GB of " + $totalSpaceGB.ToString() + " GB used"
+  register: disk_usage
+  changed_when: False
+
+- name: Display disk usage
+  debug:
+    msg: "Disk Usage: {{ disk_usage.stdout }}"

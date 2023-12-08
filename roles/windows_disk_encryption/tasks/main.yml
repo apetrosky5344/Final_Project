@@ -1,0 +1,20 @@
+---
+
+- name: Check BitLocker Status
+  ansible.windows.win_shell: |
+    Get-BitLockerVolume -MountPoint "C:"
+  register: bitlocker_status
+
+- name: Enable BitLocker with TPM Protector
+  ansible.windows.win_shell: |
+    Enable-BitLocker -MountPoint "C:" -TpmProtector -SkipHardwareTest
+  when: "'Off' in bitlocker_status.stdout"
+  register: bitlocker_enable_result
+
+- name: Backup BitLocker Recovery Key
+  ansible.windows.win_shell: |
+    $recoveryKey = (Get-BitLockerVolume -MountPoint "C:").KeyProtector | Where-Object {$_.KeyProtectorType -eq 'RecoveryPassword'}
+    Backup-BitLockerKeyProtector -MountPoint "C:" -KeyProtectorId $recoveryKey.KeyProtectorId
+    $recoveryKey.RecoveryPassword
+  when: bitlocker_enable_result is changed
+  register: bitlocker_key    

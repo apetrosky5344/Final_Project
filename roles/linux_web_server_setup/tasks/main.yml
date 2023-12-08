@@ -1,0 +1,42 @@
+---
+- name: Install Nginx
+  ansible.builtin.dnf:
+    name: nginx
+    state: present
+
+- name: Start Nginx service
+  ansible.builtin.service:
+    name: nginx
+    enabled: yes
+
+- name: Ensure OpenSSL is installed
+  dnf:
+    name: openssl
+    state: present
+
+- name: Generate a Certificate Signing Request (CSR)
+  openssl_csr:
+    path: "{{ csr_path }}"
+    privatekey_path: "{{ ssl_key_path }}"
+    common_name: "{{ common_name }}"
+    country_name: "{{ country_name }}"
+    state_or_province_name: "{{ state_name }}"
+    locality_name: "{{ locality_name }}"
+    organization_name: "{{ organization_name }}"
+    organizational_unit_name: "{{ organizational_unit }}"
+    email_address: "{{ email_address }}"
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: "{{ ssl_cert_path }}"
+    privatekey_path: "{{ ssl_key_path }}"
+    csr_path: "{{ csr_path }}"
+    provider: selfsigned
+    force: true
+
+
+- name: Update Nginx configuration
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: reload nginx

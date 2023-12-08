@@ -1,0 +1,12 @@
+---
+- name: Install FreeRADIUS
+  ansible.builtin.dnf:
+    name: freeradius
+    state: present
+
+- name: Ensure FreeRADIUS is running
+  service:
+    name: radiusd
+    state: started
+    enabled: yes
+  notify: restart freeradius

@@ -1,0 +1,23 @@
+---
+- name: Install Chrome
+  chocolatey.chocolatey.win_chocolatey:
+    name: googlechrome
+    state: present
+    ignore_checksums: yes
+
+- name: Install Firefox
+  chocolatey.chocolatey.win_chocolatey:
+    name: firefox
+    state: present
+
+- name: Install Office 365
+  ansible.windows.win_package:
+    path: C:\Users\apetrosky5344\Downloads\OfficeSetup.exe
+    state: present
+    
+
+- name: Install VLC
+  chocolatey.chocolatey.win_chocolatey:
+    name: vlc
+    state: present
+

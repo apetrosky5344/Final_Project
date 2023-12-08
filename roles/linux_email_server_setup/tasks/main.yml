@@ -1,0 +1,28 @@
+---
+- name: Install Postfix
+  ansible.builtin.dnf:
+    name: postfix
+    state: present
+
+- name: Start and enable Postfix service
+  systemd:
+    name: postfix
+    state: started
+    enabled: yes
+
+- name: Configure main.cf for local email delivery
+  blockinfile:
+    path: /etc/postfix/main.cf
+    block: |
+      myhostname = localhost
+      inet_interfaces = loopback-only
+      mydestination = $myhostname, localhost.$mydomain, localhost
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+
+- name: Restart Postfix service
+  systemd:
+    name: postfix
+    state: restarted
+  notify: restart postfix
+
+

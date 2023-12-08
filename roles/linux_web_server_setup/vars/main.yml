@@ -1,0 +1,11 @@
+---
+ssl_cert_path: /etc/ssl/nginx-selfsigned.crt
+ssl_key_path: /etc/ssl/nginx-selfsigned.key
+country_name: "US"
+state_name: "AL"
+locality_name: "Madison"
+organization_name: "YourOrganization"
+organizational_unit: "IT"
+common_name: "10.2.37.114"  # Your IP address
+email_address: "admin@example.com"
+csr_path: /etc/ssl/nginx-selfsigned.csr

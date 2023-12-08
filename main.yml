@@ -1,0 +1,18 @@
+---
+- name: Configure Windows Servers
+  hosts: windows
+  roles: 
+    -  windows_software_installation
+    -  windows_security_configuration
+    -  windows_disk_encryption
+    -  windows_system_monitoring
+    -  windows_updates_reboot
+
+- name: Configure Rocky Linux Servers
+  hosts: RockyLinuxServer
+  become: yes
+  roles:
+    - linux_web_server_setup
+    - linux_firewall_configuration
+    - linux_email_server_setup
+    - linux_freeradius_setup
